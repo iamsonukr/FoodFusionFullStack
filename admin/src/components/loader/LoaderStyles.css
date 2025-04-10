@@ -1,0 +1,201 @@
+/* LoaderStyles.css */
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f8f5f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .loader-content {
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+  }
+  
+  .loader-title {
+    margin: 30px 0;
+    color: #8b4513;
+    font-size: 28px;
+    font-weight: 700;
+  }
+  
+  .plate {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+  }
+  
+  .plate-base {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+  
+  .plate-food {
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    top: 45px;
+    left: 25px;
+    z-index: 2;
+  }
+  
+  .food-item-jig {
+    position: absolute;
+    border-radius: 8px;
+  }
+  
+  .food-item-1 {
+    width: 80px;
+    height: 40px;
+    background-color: #cd853f;
+    top: 10px;
+    left: 10px;
+  }
+  
+  .food-item-2 {
+    width: 30px;
+    height: 20px;
+    background-color: #228b22;
+    top: 0;
+    left: 35px;
+  }
+  
+  .food-item-3 {
+    width: 40px;
+    height: 15px;
+    background-color: #ff6347;
+    top: 35px;
+    left: 30px;
+  }
+  
+  .steam {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation: steam 2s infinite ease-in-out;
+  }
+  
+  .steam-1 {
+    width: 20px;
+    height: 20px;
+    top: -15px;
+    left: 20px;
+    animation-delay: 0.2s;
+  }
+  
+  .steam-2 {
+    width: 15px;
+    height: 15px;
+    top: -10px;
+    left: 45px;
+    animation-delay: 0.6s;
+  }
+  
+  .steam-3 {
+    width: 18px;
+    height: 18px;
+    top: -12px;
+    left: 70px;
+    animation-delay: 1s;
+  }
+  
+  .utensils {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+  }
+  
+  .fork, .knife {
+    position: absolute;
+    background-color: #c0c0c0;
+  }
+  
+  .fork {
+    width: 5px;
+    height: 60px;
+    bottom: 20px;
+    left: 30px;
+    border-radius: 2px;
+  }
+  
+  .knife {
+    width: 5px;
+    height: 60px;
+    bottom: 20px;
+    right: 30px;
+    border-radius: 2px;
+  }
+  
+  .progress-container {
+    margin-top: 40px;
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #8b4513, #cd853f);
+    border-radius: 5px;
+    transition: width 0.5s ease;
+  }
+  
+  .progress-text {
+    position: absolute;
+    top: -25px;
+    right: 0;
+    color: #8b4513;
+    font-weight: bold;
+  }
+  
+  @keyframes steam {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      transform: translateY(-15px) scale(1.5);
+      opacity: 0.4;
+    }
+    100% {
+      transform: translateY(-30px) scale(1);
+      opacity: 0;
+    }
+  }
+  
+  /* Adding some animations for more visual interest */
+  @keyframes plateRotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(1deg);
+    }
+    75% {
+      transform: rotate(-1deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  
+  .plate {
+    animation: plateRotate 4s infinite ease-in-out;
+  }

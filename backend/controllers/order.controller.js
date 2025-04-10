@@ -125,16 +125,25 @@ const placeOrder = async (req, res) => {
   const sendOrder = async (req, res) => {
     try {
         const { userId, items, amount, address, status, payment } = req.body;
-         console.log(req.body)
+        console.log(req.body);
 
         // Validate required fields
         if (!userId || !items || !amount || !address) {
             return res.status(400).json({ msg: "All fields are required." });
         }
 
+        // Ensure userId is a valid ObjectId
+        let userObjectId;
+        try {
+            userObjectId = mongoose.Types.ObjectId(userId);
+            console.log(typeof(userObjectId))
+        } catch (err) {
+            return res.status(400).json({ msg: "Invalid user ID format." });
+        }
+
         // Create a new order instance
         const newOrder = new orderModel({
-            userId,
+            userId: userObjectId,
             items,
             amount,
             address,
@@ -145,8 +154,8 @@ const placeOrder = async (req, res) => {
         // Save the order to the database
         const savedOrder = await newOrder.save();
 
-        await userModel.findByIdAndUpdate(userId,{cart:{}})
-
+        // Clear the user's cart after order is placed
+        await userModel.findByIdAndUpdate(userObjectId, { cart: {} });
 
         // Send a success response
         return res.status(201).json({
@@ -160,7 +169,7 @@ const placeOrder = async (req, res) => {
         // Send a generic error response
         return res.status(500).json({
             msg: "Internal server error. Unable to place order.",
-            error: error.message  // It's safer to send only the error message
+            error: error.message
         });
     }
 };

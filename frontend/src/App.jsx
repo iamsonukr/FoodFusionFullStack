@@ -8,14 +8,18 @@ import Footer from './components/Footer/Footer'
 import LoginPopup from './components/LoginPopup/LoginPopup'
 import Verify from './pages/Verify/Verify'
 import MyOrders from './pages/MyOrders/MyOrders'
+import { ToastContainer, toast } from 'react-toastify';
+import FoodDisplay from './components/FoodDisplay/FoodDisplay'
+
 
 const App = () => {
-  const[showLogin,setShowLogin]=useState(false)
-  const url='https://foodfusionfullstack.onrender.com'
+  const [showLogin, setShowLogin] = useState(false)
+  const url = 'https://foodfusionfullstack.onrender.com'
   return (
     <>
-    {showLogin?<LoginPopup setShowLogin={setShowLogin}/>:<></>}
-        <Navbar setShowLogin={setShowLogin} />
+      <ToastContainer />
+      {showLogin ? <LoginPopup setShowLogin={setShowLogin} /> : <></>}
+      <Navbar setShowLogin={setShowLogin} />
       <div className='app'>
         <Routes>
           <Route path='/' element={<Home />} />
@@ -23,6 +27,7 @@ const App = () => {
           <Route path='/order' element={<PlaceOrder />} />
           <Route path='/verify' element={<Verify />} />
           <Route path='/myorders' element={<MyOrders />} />
+          <Route path='/chack' element={<FoodDisplay />} />
         </Routes>
       </div>
       <Footer />

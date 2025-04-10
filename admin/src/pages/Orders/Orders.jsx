@@ -3,14 +3,19 @@ import './Orders.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { assets } from '../../assets/assets';
+import RestaurantLoader from '../../components/loader/RestaurantLoader';
 
 const Orders = ({ url }) => {
   const [orders, setOrders] = useState([]);
+  const [loading,setLoading]=useState(false)
 
   // Function to fetch all orders
   const fetchAllOrders = async () => {
+    setLoading(true)
     try {
       const response = await axios.get(url + "/api/order/list");
+      setLoading(false)
+
       if (response.data.success) {
         setOrders(response.data.data);
         console.log(response.data.data);
@@ -20,6 +25,8 @@ const Orders = ({ url }) => {
     } catch (error) {
       toast.error("Network error: Unable to fetch orders");
       console.error(error);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -31,11 +38,14 @@ const Orders = ({ url }) => {
   // Function to handle status change
   const statusHandler = async (event, orderId) => {
     try {
+      setLoading(true)
+      
       const response = await axios.post(url + "/api/order/status", {
         orderId,
         status: event.target.value,
       });
-
+      
+      setLoading(false  )
       if (response.data.success) {
         toast.success("Order status updated");
         await fetchAllOrders(); // Refresh the orders list
@@ -50,6 +60,8 @@ const Orders = ({ url }) => {
 
   return (
     <div className="order add">
+              {loading?<RestaurantLoader/>:""}
+
       <h3>Order Page</h3>
       <div className="order-list">
         {orders.length > 0 ? (

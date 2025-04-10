@@ -6,6 +6,8 @@ import { toast } from 'react-toastify'
 
 const Add = ({url}) => {
     const [image,setImage]=useState(false)
+      const [loading,setLoading]=useState(false)
+    
  
     // manage the states of input field
     const[data,setData]=useState({
@@ -26,6 +28,7 @@ const Add = ({url}) => {
     const handleSubmit=async(event)=>{
         //to prevent the reload of the form
         event.preventDefault();
+        setLoading(true)
         //create new FormData to collect the all form data 
 
         // formdata has its own variable to store the value of input field
@@ -40,6 +43,7 @@ const Add = ({url}) => {
         // sending the data in database
         // const response=await axios.post(`http://localhost:5000/api/food/addfood`,formData)
         const response=await axios.post(`${url}/api/food/addfood`,formData)
+        setLoading(false)
 
         // reseting input field after sending the data
         if(response.data.success){
@@ -57,6 +61,7 @@ const Add = ({url}) => {
             console.log("sending failed")
             toast.error(response.data.message)
         }
+        setLoading(false)
     }
    
     return (

@@ -11,6 +11,7 @@ const Update = () => {
     const history = useHistory();
     const [image, setImage] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
+    const [loading,setLoading]=useState(true)
     const url = 'http://localhost:5000';
 
     // Manage the states of input fields
@@ -24,8 +25,10 @@ const Update = () => {
     // Fetch existing food item data
     useEffect(() => {
         const fetchFood = async () => {
+            setLoading(true)
             try {
                 const response = await axios.get(`${url}/api/food/${id}`);
+                setLoading(false)
                 if (response.data.success) {
                     const { name, description, price, category, image } = response.data.food;
                     setData({ name, description, price, category });
@@ -35,6 +38,7 @@ const Update = () => {
                 }
             } catch (error) {
                 toast.error('Error fetching food item');
+                setLoading(false)
             }
         };
 
@@ -50,6 +54,7 @@ const Update = () => {
     // Handle form submission
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setLoading(true)
         const formData = new FormData();
         formData.append('id', id);
         formData.append('name', data.name);
@@ -74,6 +79,8 @@ const Update = () => {
 
     return (
         <div className="update">
+                    {loading?<RestaurantLoader/>:""}
+
             <form className="flex-col" onSubmit={handleSubmit}>
                 <div className="update-img-upload flex-col">
                     <p>Upload Image</p>

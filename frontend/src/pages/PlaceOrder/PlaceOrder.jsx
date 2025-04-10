@@ -4,40 +4,42 @@ import './PlaceOrder.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png'; // Proper import for the logo
+import RestaurantLoader from '../../../../admin/src/components/loader/RestaurantLoader';
+import { toast } from 'react-toastify';
 
 const PlaceOrder = () => {
-
-  const { token,cartItems,food_list, getTotalCartAmount,userId, url } = useContext(StoreContext)
-  const [foodOrders,setFoodOrders]=useState([])
+  const [loading, setLoading] = useState(false)
+  const { token, cartItems, food_list, getTotalCartAmount, userId, url } = useContext(StoreContext)
+  const [foodOrders, setFoodOrders] = useState([])
 
   useEffect(() => {
     // Function to update foodOrders
     const updateFoodOrders = () => {
-        if (typeof cartItems !== "object" || Array.isArray(cartItems)) {
-            console.error("cartItems is not an object:", cartItems);
-            console.log(typeof(cartItems));
-            return;
+      if (typeof cartItems !== "object" || Array.isArray(cartItems)) {
+        console.error("cartItems is not an object:", cartItems);
+        console.log(typeof (cartItems));
+        return;
+      }
+
+      const updatedFoodOrders = food_list.map(foodItem => {
+        const quantity = cartItems[foodItem._id]; // Get quantity from cartItems object using foodItem's _id
+        if (quantity) {
+          return {
+            ...foodItem,
+            quantity: quantity
+          };
         }
-        
-        const updatedFoodOrders = food_list.map(foodItem => {
-            const quantity = cartItems[foodItem._id]; // Get quantity from cartItems object using foodItem's _id
-            if (quantity) {
-                return {
-                    ...foodItem,
-                    quantity: quantity
-                };
-            }
-            return null; // If the item is not in the cart, return null or skip it
-        }).filter(item => item !== null); // Filter out any null items
-        
-        console.log("The food Orders are ", updatedFoodOrders);
-        setFoodOrders(updatedFoodOrders);
+        return null; // If the item is not in the cart, return null or skip it
+      }).filter(item => item !== null); // Filter out any null items
+
+      console.log("The food Orders are ", updatedFoodOrders);
+      setFoodOrders(updatedFoodOrders);
     };
 
     updateFoodOrders();
-}, [cartItems, food_list]); // Add cartItems and food_list to the dependency array
+  }, [cartItems, food_list]); // Add cartItems and food_list to the dependency array
 
-  const {}=useContext(StoreContext)
+  const { } = useContext(StoreContext)
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -54,10 +56,6 @@ const PlaceOrder = () => {
   const navigate = useNavigate();
 
   // const send Order
-
-
-  
-
   let amount = (getTotalCartAmount() + 40) * 100; // Razorpay takes amount in paise
   const currency = "INR";
   const receiptId = "ID-TEST-009";
@@ -71,6 +69,7 @@ const PlaceOrder = () => {
     }
 
     try {
+      setLoading(true)
       // Create order on the backend
       const response = await axios.post(
         `${url}/api/order/place`,
@@ -86,10 +85,9 @@ const PlaceOrder = () => {
           },
         }
       );
-
+      setLoading(false)
       const order = response.data;
       console.log("Order created:", order);
-
       // Razorpay configuration
       const paymentWindowConfig = {
         key: "rzp_test_RakCckTlR6axJb",
@@ -116,10 +114,12 @@ const PlaceOrder = () => {
 
             if (validateRes.data.msg) {
               sendOrder()
+              toast.success("Order Placed successfully")
             } else {
               console.log("Data saving failed")
             }
           } catch (error) {
+            toast.error("Something went wrong")
             console.error("Payment validation failed:", error);
           }
         },
@@ -139,6 +139,8 @@ const PlaceOrder = () => {
     } catch (error) {
       console.error("Error placing order:", error);
       alert("Error processing payment.");
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -149,11 +151,10 @@ const PlaceOrder = () => {
   };
 
 
-  
+
   async function sendOrder() {
     console.log("Payment was successfull sending your order to database...", userId)
-    // const items = Object.values(cartItems);
-    console.log("The cart items are",cartItems)
+    console.log("The cart items are", cartItems)
     try {
       const orderDetails = {
         userId,
@@ -175,20 +176,15 @@ const PlaceOrder = () => {
       };
       console.log("Sending data")
       const orderSend = await axios.post(`${url}/api/order/sendorder`, orderDetails)
-      console.log("Order has been saved",orderSend)
-      
-  
+      console.log("Order has been saved", orderSend)
     } catch (error) {
       console.log("Data is not saved")
       console.log(error)
-  
     }
   }
-
-
-
   return (
     <form onSubmit={paymentHandler} className='place-order'>
+      {loading ? <RestaurantLoader /> : ""}
       <div className="place-order-left">
         <p className="title">Delivery Information</p>
         <div className="multi-fields">

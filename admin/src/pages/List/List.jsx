@@ -2,17 +2,24 @@ import React, { useEffect, useState } from 'react'
 import './List.css'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import RestaurantLoader from '../../components/loader/RestaurantLoader'
 
 const List = ({url}) => {
   const [list, setList] = useState([])
+  const [loading,setLoading]=useState(false)
 
   // fetching the fooditems
   const fetchList = async () => {
     try {
+      setLoading(true)
       const response = await axios.get(`${url}/api/food/listfood`)
       setList(response.data.data)
+      setLoading(false)
+
     } catch (error) {
       toast.error("error")
+    }finally{
+      setLoading(false)
     }
   }
   useEffect(() => {
@@ -22,20 +29,25 @@ const List = ({url}) => {
   // Removing the food
   const removeFood=async(foodId)=>{
     try {
+      setLoading(true)
       const response=await axios.post(`${url}/api/food/remove`,{
         "id":foodId
       })
+      setLoading(false)
       console.log("Item deleted successfully")
       toast.success(response.data.message)
     } catch (error) {
       toast.success(response.data.message)
       toast.error(error)
+    }finally{
+      setLoading(false)
     }
   }
 
   return (
     <div >
       <div className="flex-col list add listMain" >
+        {loading?<RestaurantLoader/>:""}
         <p>All Foods List</p>
         <div className="list-table">
           <div className="list-table-format title">

@@ -17,11 +17,17 @@ const Navbar = () => {
       <img className='logo' src={assets.logo} alt="Foodies Fusion Logo" />
       <h1 className='admin-title'>Foodies Fusion Admin Panel</h1>
       <div className='img-btn'>
-      <button onClick={handleLogout} type="button" className="logout-button">
-        Logout
-      </button>
-      <img className='profile' src={assets.profile_image} alt="Profile" />
+        {
+          localStorage.getItem('username')==='root'
+            ? <>
 
+              <button onClick={handleLogout} type="button" className="logout-button">
+                Logout
+              </button>
+              <img className='profile' src={assets.profile_image} alt="Profile" />
+            </>
+            : "d"
+        }
       </div>
     </div>
   );
